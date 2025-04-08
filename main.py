@@ -2,13 +2,13 @@ from fastapi import FastAPI
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
-
+from passlib.context import CryptContext
 from fastapi import FastAPI,HTTPException,status,Response,Depends
 
 from typing import List
 from sqlalchemy.orm import Session
 from database import engine,get_db
-import models,schemas
+import models,schemas,utils
 
 
 
@@ -94,6 +94,11 @@ def update_post(id:int,post:schemas.PostCreate,db:Session=Depends(get_db)):
 
 @app.post("/users",status_code=status.HTTP_201_CREATED,response_model=schemas.UserOut)
 def create_user(user:schemas.UserCreate,db:Session=Depends(get_db)):
+    
+    #has a password
+    hashed_password=utils.hash(user.password)
+    user.password=hashed_password
+    
     new_user=models.User(
         **user.dict())
     db.add(new_user)
