@@ -7,9 +7,12 @@ import models,schemas
 from database import get_db
 
 
-router=APIRouter()
+router=APIRouter(
+    prefix="/posts",
+    tags=['Posts']
+)
 
-@router.get("/posts",response_model=List[schemas.Post])
+@router.get("/",response_model=List[schemas.Post])
 def get_posts(db:Session=Depends(get_db)):
     postss=db.query(models.Post).all()
     #print(postss)
@@ -17,7 +20,7 @@ def get_posts(db:Session=Depends(get_db)):
 
 
 
-@router.post("/post",status_code=status.HTTP_201_CREATED,response_model=schemas.Post)
+@router.post("/",status_code=status.HTTP_201_CREATED,response_model=schemas.Post)
 def create_post(post: schemas.PostCreate,db:Session=Depends(get_db)):  
     new_post=models.Post(
         **post.dict())
@@ -27,7 +30,7 @@ def create_post(post: schemas.PostCreate,db:Session=Depends(get_db)):
     #print(new_post) 
     return new_post
 
-@router.get("/posts/{ids}")
+@router.get("/{ids}")
 def get_post(ids:int,db:Session=Depends(get_db)):
     post=db.query(models.Post).filter(models.Post.id==ids).first()
     #print(post)
@@ -38,7 +41,7 @@ def get_post(ids:int,db:Session=Depends(get_db)):
 
 
 
-@router.delete("/post/{id}",status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{id}",status_code=status.HTTP_204_NO_CONTENT)
 def delete_post(id:int,db:Session=Depends(get_db)):    
     post=db.query(models.Post).filter(models.Post.id==id)  
     if post.first() == None:
@@ -52,7 +55,7 @@ def delete_post(id:int,db:Session=Depends(get_db)):
 
 
 
-@router.put("/post/{id}")
+@router.put("/{id}")
 def update_post(id:int,post:schemas.PostCreate,db:Session=Depends(get_db)):
     post_query=db.query(models.Post).filter(models.Post.id==id)
     posts=post_query.first()
