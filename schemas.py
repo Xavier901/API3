@@ -37,9 +37,10 @@ class UserLogin(BaseModel):
     email:EmailStr
     password:str
     
-class Token(BaseModel):
-    access_token:str
+class TokenM(BaseModel):
+    acess_token:str
     token_type:str
     
 class TokenData(BaseModel):
-    id:Optional[str]=None
+    #id: str
+    id:Optional[str]=None 

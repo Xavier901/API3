@@ -35,7 +35,7 @@ def create_post(post: schemas.PostCreate,db:Session=Depends(get_db),
     return new_post
 
 @router.get("/{ids}")
-def get_post(ids:int,db:Session=Depends(get_db)):
+def get_post(ids:int,db:Session=Depends(get_db),user_id:int=Depends(oauth.get_current_user)):
     post=db.query(models.Post).filter(models.Post.id==ids).first()
     #print(post)
     if not post:
