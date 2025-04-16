@@ -5,7 +5,7 @@ from fastapi import Depends,HTTPException,status
 from fastapi.security import OAuth2PasswordBearer
 
 
-oauth2_scheme=OAuth2PasswordBearer(tokenUrl='login')
+oauth2_scheme=OAuth2PasswordBearer(tokenUrl="login")
 
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
@@ -35,6 +35,7 @@ def verify_acess_token(token:str,credential_exception):
             raise credential_exception
         
         token_data=schemas.TokenData(id=id)
+        #token_data="1"
         
     except JWTError:
         raise credential_exception
@@ -52,3 +53,4 @@ def get_current_user(token:str = Depends(oauth2_scheme)):
     user= verify_acess_token(token,credential_exception)
     return user
     
+
