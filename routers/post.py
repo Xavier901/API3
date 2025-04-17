@@ -1,7 +1,8 @@
+
 from fastapi import FastAPI,HTTPException,status,Response,Depends,APIRouter
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
-from typing import List
+from typing import List, Optional
 
 import oauth
 import models,schemas
@@ -14,9 +15,11 @@ router=APIRouter(
 )
 
 @router.get("/",response_model=List[schemas.Post])
-def get_posts(db:Session=Depends(get_db),current_user:int=Depends(oauth.get_current_user)):
-    
-    postss=db.query(models.Post).all()
+def get_posts(db:Session=Depends(get_db),
+              current_user:int=Depends(oauth.get_current_user),
+              limit:int=10, skip:int=0,search:Optional[str]=""):
+    print(limit)
+    postss=db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
     #print(postss)
     return postss
 
