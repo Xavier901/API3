@@ -14,7 +14,7 @@ class PostBase(BaseModel):
     title:str
     content:str
     published:bool=True
-    owner:UserOut
+    
     
 class PostCreate(PostBase):
     pass
@@ -23,7 +23,8 @@ class Post(PostBase):
     id:int
     created_at:datetime
     owner_id:int
-
+    owner:UserOut
+    
     class Config:
         orm_mode=True
         
